@@ -1,0 +1,19 @@
+{
+  "agent": "xiaoxiaodong",
+  "emoji": "🐿️",
+  "timestamp": "2026-03-01T03:45:00Z",
+  "status": "online",
+  "services": {
+    "gateway": "running",
+    "node": "running",
+    "ssh_tunnel": "listening",
+    "gomoku": "running"
+  },
+  "node_pairing": {
+    "paired_with": "DongDong's MacBook Pro",
+    "paired": true,
+    "connected": false,
+    "note": "Mac 端 node service 未连接"
+  },
+  "last_action": "fixed gateway token mismatch"
+}

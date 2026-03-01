@@ -67,8 +67,9 @@
 
 ## 待建设
 
-- [ ] 修复 gateway token mismatch
-- [ ] 双向 node 通信
+- [x] 修复 gateway token mismatch（2026-03-01 ✅）
+- [ ] 双向 node 通信验证
 - [ ] Agent 自动发现与注册
 - [ ] 任务队列与调度
-- [ ] 健康检查与心跳
+- [x] 健康检查与心跳协议（protocols/health-check.md ✅）
+- [x] Session 通信协议（protocols/session-bridge.md ✅）
