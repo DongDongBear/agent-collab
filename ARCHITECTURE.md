@@ -1,50 +1,74 @@
 # 🏗️ Architecture
 
-## 网络拓扑
+## 设计目标
+
+支持 **N 个 Agent** 协作，而不只是两个。新 Agent 加入应该是低成本的。
+
+## 整体架构
 
 ```
-┌─────────────────────┐         SSH 反向隧道         ┌─────────────────────┐
-│   🌰 核桃 (Mac)      │◄──────────────────────────►│   🐿️ 小小动 (VM)     │
-│                     │    Mac:18789 ← VM:18790     │                     │
-│  OpenClaw Gateway   │                             │  OpenClaw Gateway   │
-│  :18789             │                             │  :18789             │
-│                     │                             │                     │
-│  Node Host ────────►│─── registers as node ──────►│  (接受 node 连接)    │
-│  (connects to VM)   │                             │                     │
-└─────────────────────┘                             └─────────────────────┘
+                    ┌──────────────┐
+                    │  🧑 DongDong  │
+                    │  (Human)     │
+                    └──────┬───────┘
+                           │ 飞书 / GitHub Issues
+                    ┌──────▼───────┐
+                    │   Agent Hub   │
+                    │  (this repo)  │
+                    └──────┬───────┘
+              ┌────────────┼────────────┐
+              ▼            ▼            ▼
+        ┌───────────┐┌───────────┐┌───────────┐
+        │ 🐿️ 小小动  ││ 🌰 核桃    ││ 🤖 Agent N │
+        │ Cloud VM  ││ MacBook   ││ ???       │
+        └───────────┘└───────────┘└───────────┘
 ```
 
-## 通信方式
+## 通信层
 
-### 核桃 → 小小动
-- 核桃的 gateway 可以通过 `nodes.run` 在小小动的机器上执行命令
-- SSH 反向隧道保持连接（Mac:18789 → VM:18790）
+### 层级
 
-### 小小动 → 核桃
-- **待建设** — 目前小小动无法主动调用核桃
-- 方案：小小动也运行 node host 连接到核桃的 gateway（通过 SSH 隧道）
+1. **直接通信** — OpenClaw node pairing (nodes.run / sessions_send)
+2. **异步同步** — Git 仓库（push/pull）
+3. **人工中转** — 飞书消息（降级方案）
 
-### 共享状态
-- **GitHub 仓库** — 这个项目本身就是共享状态
-- **飞书消息** — 通过 DongDong 中转
-- **文件系统** — 各自的 workspace 独立
+### 当前网络
 
-## 基础设施
+```
+🌰 核桃 (Mac)  ◄── SSH 反向隧道 ──►  🐿️ 小小动 (VM)
+   :18789                              :18789 (gateway)
+                                        :18790 (tunnel endpoint)
+```
 
-### 小小动 (VM-0-12-opencloudos)
-- OS: OpenCloudOS 9 (Linux 6.6)
-- Node.js: v22.22.0
-- Gateway: port 18789 (loopback)
-- Node Host Service: systemd (openclaw-node.service)
-- 已安装: edge-tts, ffmpeg, nginx, rapfi (五子棋 AI)
+### 新 Agent 接入方式
 
-### 核桃 (MacBook Pro)
-- OS: macOS
-- OpenClaw companion app + gateway
-- 通过 SSH 隧道连接到 VM
+1. **云端 Agent** — 直接 SSH / VPN 连接
+2. **本地 Agent** — SSH 反向隧道 + OpenClaw node host
+3. **移动端 Agent** — OpenClaw companion app
+4. **临时 Agent** — 子 Agent (sessions_spawn)，任务完成后销毁
 
-## 待解决
+## Agent 注册
 
-- [ ] 修复 gateway token mismatch（nodes 工具无法使用）
-- [ ] 建立双向 node 通信
-- [ ] 定义 API/协议：两个 Agent 如何互相发任务
+每个 Agent 在 `agents/registry.json` 中注册：
+- id, name, emoji
+- environment (type, os, always_on)
+- capabilities (能力列表)
+- connection (通信方式)
+- status (online / offline / pending)
+
+## 共享状态
+
+| 状态类型 | 存储位置 | 说明 |
+|---------|---------|------|
+| Agent 注册 | agents/registry.json | 谁在、能做什么 |
+| 协作协议 | protocols/ | 怎么协作 |
+| 实验记录 | experiments/ | 尝试了什么 |
+| 演进日志 | CHANGELOG.md | 什么时候变了什么 |
+
+## 待建设
+
+- [ ] 修复 gateway token mismatch
+- [ ] 双向 node 通信
+- [ ] Agent 自动发现与注册
+- [ ] 任务队列与调度
+- [ ] 健康检查与心跳

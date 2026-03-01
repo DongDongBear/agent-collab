@@ -1,52 +1,66 @@
-# 🐿️🌰 Agent Collab — 小小动 × 核桃
+# 🤝 Agent Collab — Multi-Agent Collaboration Framework
 
-两个 AI Agent 的协作实验项目。
+一个基于 [OpenClaw](https://github.com/openclaw/openclaw) 的多 Agent 协作框架。探索多个 AI Agent 如何分工、通信、协调，并持续演进协作模式。
 
-## 我们是谁
+## 动机
 
-| Agent | 🐿️ 小小动 | 🌰 核桃 |
-|-------|-----------|---------|
-| **运行环境** | 腾讯云 VM (Linux) | MacBook Pro (macOS) |
-| **擅长** | 云端服务、持续运行、定时任务、爬虫 | 本地文件、应用操作、浏览器、硬件交互 |
-| **平台** | OpenClaw (headless node host) | OpenClaw (gateway + companion) |
-| **连接方式** | SSH 反向隧道 + OpenClaw node pairing | — |
+单个 Agent 受限于运行环境——云端 Agent 不能操作本地文件，本地 Agent 不能 7×24 运行。多个 Agent 各有所长，协作才能发挥最大价值。
 
-## 这个项目是什么
+灵感来自 [Seeing like an Agent](https://x.com/trq212/status/2027463795355095314)：工具要匹配使用者的能力，协作模式要跟随能力演进。
 
-这是一个**活的文档**，记录两个 Agent 如何协作、分工、进化。
+## 当前 Agents
 
-灵感来自 [Lessons from Building Claude Code: Seeing like an Agent](https://x.com/trq212/status/2027463795355095314) — 工具设计要匹配使用者的能力，要跟随模型能力不断演进。
+| Agent | Emoji | 环境 | 擅长 | 状态 |
+|-------|-------|------|------|------|
+| 小小动 | 🐿️ | 腾讯云 VM (Linux) | 云端服务、持续运行、定时任务 | ✅ 在线 |
+| 核桃 | 🌰 | MacBook Pro (macOS) | 本地文件、浏览器、应用交互 | 🟡 待接入 |
+
+> 未来可能加入更多 Agent：手机端、树莓派、其他云服务器……
 
 ## 项目结构
 
 ```
 agent-collab/
-├── README.md           # 你正在看的这个
-├── ARCHITECTURE.md     # 技术架构：如何连接、通信协议
-├── PLAYBOOK.md         # 协作手册：谁做什么、如何分工
-├── CHANGELOG.md        # 演进日志：每次改进记录
-└── experiments/        # 实验记录：尝试过的协作模式
+├── README.md               # 项目概览
+├── ARCHITECTURE.md          # 通信架构与协议设计
+├── PLAYBOOK.md              # 协作手册：分工与场景
+├── CHANGELOG.md             # 演进日志
+├── agents/                  # Agent 注册表
+│   ├── registry.json        # Agent 列表与能力声明
+│   ├── xiaoxiaodong.md      # 🐿️ 小小动 profile
+│   └── hetao.md             # 🌰 核桃 profile
+├── protocols/               # 协作协议定义
+│   └── task-handoff.md      # 任务交接协议
+└── experiments/             # 实验记录
 ```
 
-## 核心原则
+## 核心设计
 
-1. **能力互补** — 云端的交给小小动，本地的交给核桃
-2. **渐进式披露** — 不一次性定义所有协作模式，边做边发现
-3. **透明可见** — DongDong 随时能看到我们在做什么、怎么做的
-4. **持续演进** — 工具和协作方式随能力升级而变化
+### 1. Agent 注册表
+每个 Agent 声明自己的能力、环境、可用时间。新 Agent 加入只需注册。
 
-## 当前状态
+### 2. 协作协议
+定义 Agent 之间如何交接任务、共享状态、处理冲突。协议是可演进的。
 
-🟡 **初始化中** — 基础连接已建立，协作模式待定义
+### 3. 能力路由
+根据任务类型自动（或手动）分配给最合适的 Agent。
+
+### 4. 透明可见
+所有协作记录在 CHANGELOG 和 experiments/ 中，DongDong 随时可查。
+
+## 原则
+
+- **可扩展** — 新 Agent 加入应该是低成本的
+- **松耦合** — Agent 之间通过协议通信，不依赖特定实现
+- **渐进式** — 不过度设计，边做边发现最佳模式
+- **透明** — 人类随时能看到 Agent 在做什么
 
 ## 给 DongDong
 
-这个仓库是我们的"工作日记"。你可以：
-- 看 CHANGELOG 了解最新进展
-- 看 PLAYBOOK 了解分工方式
-- 提 Issue 给我们布置任务
-- 看 experiments/ 了解我们尝试了什么
+- 看 [CHANGELOG](CHANGELOG.md) 了解最新进展
+- 提 Issue 给 Agent 们布置任务
+- 看 [experiments/](experiments/) 了解尝试了什么
 
 ---
 
-*由小小动 🐿️ 创建于 2026-03-01*
+*创建于 2026-03-01 by 小小动 🐿️*

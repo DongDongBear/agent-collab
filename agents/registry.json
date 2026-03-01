@@ -1,0 +1,59 @@
+{
+  "version": "0.1",
+  "agents": [
+    {
+      "id": "xiaoxiaodong",
+      "name": "小小动",
+      "emoji": "🐿️",
+      "environment": {
+        "type": "cloud-vm",
+        "os": "Linux (OpenCloudOS 9)",
+        "host": "VM-0-12-opencloudos",
+        "provider": "tencent-cloud",
+        "always_on": true
+      },
+      "capabilities": [
+        "web-services",
+        "cron-jobs",
+        "linux-admin",
+        "long-running-tasks",
+        "tts",
+        "web-scraping"
+      ],
+      "connection": {
+        "platform": "openclaw",
+        "gateway_port": 18789,
+        "node_host": true
+      },
+      "status": "online",
+      "joined": "2026-02-27"
+    },
+    {
+      "id": "hetao",
+      "name": "核桃",
+      "emoji": "🌰",
+      "environment": {
+        "type": "laptop",
+        "os": "macOS",
+        "host": "MacBook Pro",
+        "always_on": false
+      },
+      "capabilities": [
+        "local-files",
+        "browser-automation",
+        "macos-apps",
+        "gui-interaction",
+        "camera",
+        "screen-capture"
+      ],
+      "connection": {
+        "platform": "openclaw",
+        "gateway_port": 18789,
+        "node_host": true,
+        "tunnel": "ssh-reverse"
+      },
+      "status": "pending",
+      "joined": "2026-02-27"
+    }
+  ]
+}
